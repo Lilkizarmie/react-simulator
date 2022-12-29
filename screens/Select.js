@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Modal, TouchableOpacity, SafeAreaView } from 'react-native';
-import { ModalPicker } from './components/ModalPicker';
-
-const App = () => {
+import { ModalPicker } from '../components/ModalPicker';
+const Select = () => {
   const [chooseData, setchooseData] = useState('Select item..');
   const [isModalVisible, setisModalVisible] = useState(false);
 
@@ -33,9 +32,13 @@ const App = () => {
        setData={setData}
        /> 
       </Modal>
+
+      <Text>
+        Next
+      </Text>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -57,4 +60,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default App;
+export default Select
