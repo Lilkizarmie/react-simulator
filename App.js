@@ -1,60 +1,56 @@
-import React, {useState} from 'react';
-import { StyleSheet, Text, View, Modal, TouchableOpacity, SafeAreaView } from 'react-native';
-import { ModalPicker } from './components/ModalPicker';
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect }from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const App = () => {
-  const [chooseData, setchooseData] = useState('Select item..');
-  const [isModalVisible, setisModalVisible] = useState(false);
+import Onboarding from "./screens/Onboarding";
+import HomeScreen from "./components/HomeScreen";
 
-  const changeModalVisibility = (bool) => {
-    setisModalVisible(bool)
+
+
+export default App = () => {
+  const [loading, setLoading] = useState(true);
+  const [viewOnboarding, setViewedOnboarding] = useState(false);
+
+  const checkOnboarding = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@viewedOnboarding');
+
+      if (value !== null) {
+        setViewedOnboarding(true)
+      }
+    } catch {
+      crossOriginIsolated.log('Error @checkOnboarding: ', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const setData = (option) => {
-    setchooseData(option)
+  useEffect(() => {
+    checkOnboarding();
+  }, []);
+
+  const Loading = () => {
+    <View>
+      <ActivityIndicator size="large"/>
+    </View>
   }
-   
+
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        onPress={() => changeModalVisibility(true)}
-        style={styles.touchableOpacity}
-      >
-        <Text style={styles.text}>{chooseData}</Text>
-      </TouchableOpacity>
-      <Modal
-        transparent={true}
-        animationType='fade'
-        visible={isModalVisible}
-        nRequestClose={() => changeModalVisibility(false)}
-      >
-       <ModalPicker
-       changeModalVisibility={changeModalVisibility}
-       setData={setData}
-       /> 
-      </Modal>
-    </SafeAreaView>
+    <View style={styles.container}>
+      {loading ? <Loading /> : viewOnboarding ? <HomeScreen /> : <Onboarding/>}
+      <StatusBar style="auto"/>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'green',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20
   },
-  text: {
-    marginVertical: 20,
-    fontSize: 25,
-  },
-  touchableOpacity: {
-    backgroundColor: 'orange',
-    alignSelf: 'stretch',
-    paddingHorizontal: 20,
-    marginHorizontal: 20
-  }
 });
 
-export default App;
+
